@@ -118,3 +118,83 @@ button {
     grid-template-columns: 1fr;
   }
 }
+/* ===== TOOL CARD BASE ===== */
+.tool-card {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #fdfdfd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.range-row input[type="range"] {
+  flex: 1;
+}
+
+#pw-length-value {
+  min-width: 2ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.field.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.5rem;
+  align-items: center;
+}
+
+.field.options span {
+  font-weight: 600;
+}
+
+.field.options label {
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.actions button:hover {
+  background: var(--accent-hover);
+}
+
+.actions button:active {
+  transform: scale(0.97);
+}
+
+.helper-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
