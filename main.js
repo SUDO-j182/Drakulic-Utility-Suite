@@ -3,8 +3,14 @@ console.log("Utility Suite Loaded");
 const buttons = document.querySelectorAll(".tool-list button");
 const panel = document.querySelector(".tool-panel");
 
+// ============================================================
+// TOOL SWITCHING
+// ============================================================
+
 buttons.forEach(btn => {
   btn.addEventListener("click", () => {
+
+    // highlight active button
     buttons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
@@ -12,11 +18,19 @@ buttons.forEach(btn => {
 
     if (tool === "password") {
       renderPasswordTool();
-    } else {
+    }
+    else if (tool === "text-analyzer") {
+      renderTextAnalyzer();
+    }
+    else {
       renderPlaceholder(tool, btn.textContent);
     }
   });
 });
+
+// ============================================================
+// PLACEHOLDER (for tools not yet built)
+// ============================================================
 
 function renderPlaceholder(toolKey, label) {
   panel.innerHTML = `
@@ -25,7 +39,10 @@ function renderPlaceholder(toolKey, label) {
   `;
 }
 
-// ===== PASSWORD GENERATOR UI (UI ONLY, NO LOGIC YET) =====
+// ============================================================
+// PASSWORD GENERATOR
+// ============================================================
+
 function renderPasswordTool() {
   panel.innerHTML = `
     <h2>Password Generator</h2>
@@ -61,7 +78,7 @@ function renderPasswordTool() {
     </div>
   `;
 
-  // ===== Element references =====
+  // element references
   const lenSlider = document.getElementById("pw-length");
   const lenValue = document.getElementById("pw-length-value");
   const out = document.getElementById("pw-output");
@@ -75,12 +92,12 @@ function renderPasswordTool() {
   const generateBtn = document.getElementById("pw-generate");
   const copyBtn = document.getElementById("pw-copy");
 
-  // ===== Update length label live =====
+  // update displayed length
   lenSlider.addEventListener("input", () => {
     lenValue.textContent = lenSlider.value;
   });
 
-  // ===== Password generation logic =====
+  // generate password
   generateBtn.addEventListener("click", () => {
     const length = parseInt(lenSlider.value);
 
@@ -116,7 +133,7 @@ function renderPasswordTool() {
     msg.style.color = "green";
   });
 
-  // ===== Copy to clipboard =====
+  // copy to clipboard
   copyBtn.addEventListener("click", () => {
     if (!out.value) {
       msg.textContent = "Generate a password first.";
@@ -129,4 +146,30 @@ function renderPasswordTool() {
     msg.style.color = "green";
   });
 }
+
+// ============================================================
+// TEXT ANALYZER (UI ONLY for now)
+// ============================================================
+
+function renderTextAnalyzer() {
+  panel.innerHTML = `
+    <h2>Text Analyzer</h2>
+
+    <div class="tool-card">
+
+      <div class="field">
+        <label for="ta-input">Enter Text</label>
+        <textarea id="ta-input" rows="6" placeholder="Type or paste your text here..."></textarea>
+      </div>
+
+      <div class="stats">
+        <div><strong>Characters:</strong> <span id="ta-chars">0</span></div>
+        <div><strong>Words:</strong> <span id="ta-words">0</span></div>
+        <div><strong>Sentences:</strong> <span id="ta-sentences">0</span></div>
+      </div>
+
+    </div>
+  `;
+}
+
 
