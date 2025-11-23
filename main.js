@@ -301,7 +301,7 @@ function renderColorTools() {
 }
 
 // ============================================================
-// UNIT CONVERTER — UI + LENGTH LOGIC WORKING
+// UNIT CONVERTER — ALL CATEGORIES
 // ============================================================
 
 function renderUnitConverter() {
@@ -365,7 +365,6 @@ function renderUnitConverter() {
   });
 }
 
-// Unit lists
 function loadUnitOptions(category) {
   const from = document.getElementById("uc-from");
   const to = document.getElementById("uc-to");
@@ -386,10 +385,14 @@ function loadUnitOptions(category) {
   });
 }
 
-// ============================================================
-// LENGTH CONVERSION LOGIC (FIRST WORKING CATEGORY)
-// ============================================================
+// -------- helper for formatting numbers --------
+function formatResult(num) {
+  if (!Number.isFinite(num)) return "NaN";
+  if (Math.abs(num) < 1e-6) return "0";
+  return Number.isInteger(num) ? num.toString() : num.toFixed(4);
+}
 
+// Main dispatcher for conversion
 function runConversion(category) {
   const value = parseFloat(document.getElementById("uc-value").value);
   const from = document.getElementById("uc-from").value;
@@ -400,19 +403,32 @@ function runConversion(category) {
   if (isNaN(value)) {
     msg.textContent = "Enter a valid number.";
     msg.style.color = "red";
+    resultBox.value = "";
     return;
   }
 
-  // Only length works for now — others to be added later
+  let result;
+
   if (category === "length") {
-    const result = convertLength(value, from, to);
-    resultBox.value = result;
-    msg.textContent = "Converted!";
-    msg.style.color = "green";
+    result = convertLength(value, from, to);
+  } else if (category === "weight") {
+    result = convertWeight(value, from, to);
+  } else if (category === "temperature") {
+    result = convertTemperature(value, from, to);
+  } else if (category === "speed") {
+    result = convertSpeed(value, from, to);
+  } else {
+    msg.textContent = "Unsupported category.";
+    msg.style.color = "red";
+    return;
   }
+
+  resultBox.value = formatResult(result);
+  msg.textContent = "Converted!";
+  msg.style.color = "green";
 }
 
-// Conversion table
+// -------- LENGTH (base: meters) --------
 function convertLength(value, from, to) {
   const meters = {
     meters: 1,
@@ -424,10 +440,72 @@ function convertLength(value, from, to) {
   };
 
   const inMeters = value * meters[from];
-  const converted = inMeters / meters[to];
-
-  return converted;
+  return inMeters / meters[to];
 }
+
+// -------- WEIGHT (base: kilograms) --------
+function convertWeight(value, from, to) {
+  const kilograms = {
+    grams: 0.001,
+    kilograms: 1,
+    pounds: 0.45359237,
+    ounces: 0.0283495
+  };
+
+  const inKg = value * kilograms[from];
+  return inKg / kilograms[to];
+}
+
+// -------- TEMPERATURE (convert via Celsius) --------
+function convertTemperature(value, from, to) {
+  let celsius;
+
+  // to celsius
+  switch (from) {
+    case "celsius":
+      celsius = value;
+      break;
+    case "fahrenheit":
+      celsius = (value - 32) * 5 / 9;
+      break;
+    case "kelvin":
+      celsius = value - 273.15;
+      break;
+    default:
+      celsius = value;
+  }
+
+  // from celsius
+  let result;
+  switch (to) {
+    case "celsius":
+      result = celsius;
+      break;
+    case "fahrenheit":
+      result = (celsius * 9 / 5) + 32;
+      break;
+    case "kelvin":
+      result = celsius + 273.15;
+      break;
+    default:
+      result = celsius;
+  }
+
+  return result;
+}
+
+// -------- SPEED (base: m/s) --------
+function convertSpeed(value, from, to) {
+  const metersPerSecond = {
+    "m/s": 1,
+    "km/h": 1000 / 3600,
+    "mph": 0.44704
+  };
+
+  const inMps = value * metersPerSecond[from];
+  return inMps / metersPerSecond[to];
+}
+
 
 
 
