@@ -289,3 +289,41 @@ button {
   border: 1px solid var(--border);
 }
 
+/* =========================================================
+   TEXT CASE CONVERTER
+========================================================= */
+
+#tc-input,
+#tc-output {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  resize: vertical;
+  font-size: 1rem;
+}
+
+.case-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.case-actions button {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.case-actions button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.case-actions button:active {
+  transform: scale(0.97);
+}

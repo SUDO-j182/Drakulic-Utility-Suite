@@ -27,6 +27,9 @@ buttons.forEach(btn => {
     else if (tool === "unit-converter") {
       renderUnitConverter();
     }
+    else if (tool === "text-case") {
+      renderTextCaseConverter();
+    }
     else {
       renderPlaceholder(tool, btn.textContent);
     }
@@ -385,14 +388,12 @@ function loadUnitOptions(category) {
   });
 }
 
-// -------- helper for formatting numbers --------
 function formatResult(num) {
   if (!Number.isFinite(num)) return "NaN";
   if (Math.abs(num) < 1e-6) return "0";
   return Number.isInteger(num) ? num.toString() : num.toFixed(4);
 }
 
-// Main dispatcher for conversion
 function runConversion(category) {
   const value = parseFloat(document.getElementById("uc-value").value);
   const from = document.getElementById("uc-from").value;
@@ -428,7 +429,7 @@ function runConversion(category) {
   msg.style.color = "green";
 }
 
-// -------- LENGTH (base: meters) --------
+// LENGTH
 function convertLength(value, from, to) {
   const meters = {
     meters: 1,
@@ -443,7 +444,7 @@ function convertLength(value, from, to) {
   return inMeters / meters[to];
 }
 
-// -------- WEIGHT (base: kilograms) --------
+// WEIGHT
 function convertWeight(value, from, to) {
   const kilograms = {
     grams: 0.001,
@@ -456,11 +457,10 @@ function convertWeight(value, from, to) {
   return inKg / kilograms[to];
 }
 
-// -------- TEMPERATURE (convert via Celsius) --------
+// TEMPERATURE
 function convertTemperature(value, from, to) {
   let celsius;
 
-  // to celsius
   switch (from) {
     case "celsius":
       celsius = value;
@@ -475,7 +475,6 @@ function convertTemperature(value, from, to) {
       celsius = value;
   }
 
-  // from celsius
   let result;
   switch (to) {
     case "celsius":
@@ -494,7 +493,7 @@ function convertTemperature(value, from, to) {
   return result;
 }
 
-// -------- SPEED (base: m/s) --------
+// SPEED
 function convertSpeed(value, from, to) {
   const metersPerSecond = {
     "m/s": 1,
@@ -506,9 +505,99 @@ function convertSpeed(value, from, to) {
   return inMps / metersPerSecond[to];
 }
 
+// ============================================================
+// TEXT CASE CONVERTER
+// ============================================================
 
+function renderTextCaseConverter() {
+  panel.innerHTML = `
+    <h2>Text Case Converter</h2>
 
+    <div class="tool-card">
 
+      <div class="field">
+        <label for="tc-input">Input Text</label>
+        <textarea id="tc-input" rows="6" placeholder="Type or paste your text here..."></textarea>
+      </div>
 
+      <div class="case-actions">
+        <button data-action="upper">UPPERCASE</button>
+        <button data-action="lower">lowercase</button>
+        <button data-action="sentence">Sentence case</button>
+        <button data-action="title">Title Case</button>
+        <button data-action="clear">Clear</button>
+        <button data-action="copy">Copy Output</button>
+      </div>
 
+      <div class="field">
+        <label for="tc-output">Output</label>
+        <textarea id="tc-output" rows="6" readonly placeholder="Converted text will appear here..."></textarea>
+      </div>
 
+      <p id="tc-message" class="helper-text"></p>
+    </div>
+  `;
+
+  const input = document.getElementById("tc-input");
+  const output = document.getElementById("tc-output");
+  const msg = document.getElementById("tc-message");
+  const buttons = document.querySelectorAll(".case-actions button");
+
+  function toSentenceCase(text) {
+    const lower = text.toLowerCase();
+    return lower.replace(/(^\s*[a-z])|([.!?]\s*[a-z])/g, (match) => match.toUpperCase());
+  }
+
+  function toTitleCase(text) {
+    return text
+      .toLowerCase()
+      .replace(/\b\w+/g, (word) => word.charAt(0).toUpperCase() + word.slice(1));
+  }
+
+  function setMessage(text, isError = false) {
+    msg.textContent = text;
+    msg.style.color = isError ? "red" : "green";
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.action;
+      const value = input.value;
+
+      if (action !== "clear" && action !== "copy" && !value) {
+        setMessage("Enter some text first.", true);
+        return;
+      }
+
+      if (action === "upper") {
+        output.value = value.toUpperCase();
+        setMessage("Converted to UPPERCASE.");
+      }
+      else if (action === "lower") {
+        output.value = value.toLowerCase();
+        setMessage("Converted to lowercase.");
+      }
+      else if (action === "sentence") {
+        output.value = toSentenceCase(value);
+        setMessage("Converted to Sentence case.");
+      }
+      else if (action === "title") {
+        output.value = toTitleCase(value);
+        setMessage("Converted to Title Case.");
+      }
+      else if (action === "clear") {
+        input.value = "";
+        output.value = "";
+        setMessage("Cleared.");
+      }
+      else if (action === "copy") {
+        if (!output.value) {
+          setMessage("Nothing to copy yet.", true);
+          return;
+        }
+        navigator.clipboard.writeText(output.value);
+        setMessage("Output copied to clipboard.");
+      }
+    });
+  });
+}
