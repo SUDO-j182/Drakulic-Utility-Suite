@@ -25,6 +25,9 @@ buttons.forEach(btn => {
     else if (tool === "color-tools") {
       renderColorTools();
     }
+    else if (tool === "unit-converter") {
+      renderUnitConverter();
+    }
     else {
       renderPlaceholder(tool, btn.textContent);
     }
@@ -81,7 +84,6 @@ function renderPasswordTool() {
     </div>
   `;
 
-  // element references
   const lenSlider = document.getElementById("pw-length");
   const lenValue = document.getElementById("pw-length-value");
   const out = document.getElementById("pw-output");
@@ -95,12 +97,10 @@ function renderPasswordTool() {
   const generateBtn = document.getElementById("pw-generate");
   const copyBtn = document.getElementById("pw-copy");
 
-  // update displayed length
   lenSlider.addEventListener("input", () => {
     lenValue.textContent = lenSlider.value;
   });
 
-  // generate password
   generateBtn.addEventListener("click", () => {
     const length = parseInt(lenSlider.value);
 
@@ -136,7 +136,6 @@ function renderPasswordTool() {
     msg.style.color = "green";
   });
 
-  // copy to clipboard
   copyBtn.addEventListener("click", () => {
     if (!out.value) {
       msg.textContent = "Generate a password first.";
@@ -174,7 +173,6 @@ function renderTextAnalyzer() {
     </div>
   `;
 
-  // Elements
   const input = document.getElementById("ta-input");
   const chars = document.getElementById("ta-chars");
   const words = document.getElementById("ta-words");
@@ -183,21 +181,18 @@ function renderTextAnalyzer() {
   input.addEventListener("input", () => {
     const text = input.value;
 
-    // Character count
     chars.textContent = text.length;
 
-    // Word count
     const wordList = text.trim().split(/\s+/).filter(w => w.length > 0);
     words.textContent = text.trim() === "" ? 0 : wordList.length;
 
-    // Sentence count
     const sentenceList = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
     sentences.textContent = sentenceList.length;
   });
 }
 
 // ============================================================
-// COLOR TOOLS (HEX ⇄ RGB + PREVIEW)
+// COLOR TOOLS
 // ============================================================
 
 function renderColorTools() {
@@ -263,7 +258,6 @@ function renderColorTools() {
 
   function parseRgb(str) {
     const value = str.trim();
-    // allow "r, g, b" or "r g b"
     const parts = value.split(/[\s,]+/).filter(Boolean);
     if (parts.length !== 3) return null;
 
@@ -306,6 +300,89 @@ function renderColorTools() {
     showMessage("Converted RGB → HEX.");
   });
 }
+
+// ============================================================
+// UNIT CONVERTER (UI + UNIT LISTS, NO MATH YET)
+// ============================================================
+
+function renderUnitConverter() {
+  panel.innerHTML = `
+    <h2>Unit Converter</h2>
+
+    <div class="tool-card">
+
+      <div class="field">
+        <label>Category</label>
+        <select id="uc-category">
+          <option value="length">Length</option>
+          <option value="weight">Weight</option>
+          <option value="temperature">Temperature</option>
+          <option value="speed">Speed</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Value</label>
+        <input type="number" id="uc-value" placeholder="Enter value">
+      </div>
+
+      <div class="field converter-row">
+        <div>
+          <label>From</label>
+          <select id="uc-from"></select>
+        </div>
+
+        <div>
+          <label>To</label>
+          <select id="uc-to"></select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="uc-convert">Convert</button>
+      </div>
+
+      <div class="field">
+        <label>Result</label>
+        <input type="text" id="uc-result" readonly>
+      </div>
+
+      <p id="uc-message" class="helper-text"></p>
+
+    </div>
+  `;
+
+  const category = document.getElementById("uc-category");
+  loadUnitOptions(category.value);
+
+  category.addEventListener("change", () => {
+    loadUnitOptions(category.value);
+  });
+
+  // convert button will be wired in later when we add math logic
+}
+
+// populate options for each category
+function loadUnitOptions(category) {
+  const from = document.getElementById("uc-from");
+  const to = document.getElementById("uc-to");
+
+  const units = {
+    length: ["meters", "kilometers", "centimeters", "feet", "inches", "miles"],
+    weight: ["grams", "kilograms", "pounds", "ounces"],
+    temperature: ["celsius", "fahrenheit", "kelvin"],
+    speed: ["m/s", "km/h", "mph"]
+  };
+
+  from.innerHTML = "";
+  to.innerHTML = "";
+
+  units[category].forEach(unit => {
+    from.innerHTML += `<option value="${unit}">${unit}</option>`;
+    to.innerHTML += `<option value="${unit}">${unit}</option>`;
+  });
+}
+
 
 
 

@@ -56,7 +56,7 @@ button {
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 1rem;
-  padding: 0 1rem;
+  padding: 0 1rem 2rem;
 }
 
 /* =========================================================
@@ -118,7 +118,10 @@ button {
     grid-template-columns: 1fr;
   }
 }
-/* ===== TOOL CARD BASE ===== */
+
+/* =========================================================
+   TOOL CARD BASE
+========================================================= */
 .tool-card {
   margin-top: 1rem;
   padding: 1.5rem;
@@ -198,7 +201,35 @@ button {
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
-/* ===== COLOR TOOLS ===== */
+
+/* =========================================================
+   TEXT ANALYZER
+========================================================= */
+#ta-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  resize: vertical;
+  font-size: 1rem;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.stats div {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   COLOR TOOLS
+========================================================= */
 .color-row {
   display: flex;
   flex-wrap: wrap;
@@ -237,3 +268,24 @@ button {
   color: var(--text-secondary);
   background: #f3f3f3;
 }
+
+/* =========================================================
+   UNIT CONVERTER
+========================================================= */
+.converter-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.converter-row > div {
+  flex: 1;
+}
+
+.converter-row select,
+#uc-category {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
