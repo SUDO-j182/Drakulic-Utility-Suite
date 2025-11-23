@@ -10,7 +10,6 @@ const panel = document.querySelector(".tool-panel");
 buttons.forEach(btn => {
   btn.addEventListener("click", () => {
 
-    // highlight active button
     buttons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
@@ -35,7 +34,7 @@ buttons.forEach(btn => {
 });
 
 // ============================================================
-// PLACEHOLDER (for tools not yet built)
+// PLACEHOLDER
 // ============================================================
 
 function renderPlaceholder(toolKey, label) {
@@ -302,7 +301,7 @@ function renderColorTools() {
 }
 
 // ============================================================
-// UNIT CONVERTER (UI + UNIT LISTS, NO MATH YET)
+// UNIT CONVERTER — UI + LENGTH LOGIC WORKING
 // ============================================================
 
 function renderUnitConverter() {
@@ -353,16 +352,20 @@ function renderUnitConverter() {
   `;
 
   const category = document.getElementById("uc-category");
+  const convertBtn = document.getElementById("uc-convert");
+
   loadUnitOptions(category.value);
 
   category.addEventListener("change", () => {
     loadUnitOptions(category.value);
   });
 
-  // convert button will be wired in later when we add math logic
+  convertBtn.addEventListener("click", () => {
+    runConversion(category.value);
+  });
 }
 
-// populate options for each category
+// Unit lists
 function loadUnitOptions(category) {
   const from = document.getElementById("uc-from");
   const to = document.getElementById("uc-to");
@@ -382,6 +385,50 @@ function loadUnitOptions(category) {
     to.innerHTML += `<option value="${unit}">${unit}</option>`;
   });
 }
+
+// ============================================================
+// LENGTH CONVERSION LOGIC (FIRST WORKING CATEGORY)
+// ============================================================
+
+function runConversion(category) {
+  const value = parseFloat(document.getElementById("uc-value").value);
+  const from = document.getElementById("uc-from").value;
+  const to = document.getElementById("uc-to").value;
+  const resultBox = document.getElementById("uc-result");
+  const msg = document.getElementById("uc-message");
+
+  if (isNaN(value)) {
+    msg.textContent = "Enter a valid number.";
+    msg.style.color = "red";
+    return;
+  }
+
+  // Only length works for now — others to be added later
+  if (category === "length") {
+    const result = convertLength(value, from, to);
+    resultBox.value = result;
+    msg.textContent = "Converted!";
+    msg.style.color = "green";
+  }
+}
+
+// Conversion table
+function convertLength(value, from, to) {
+  const meters = {
+    meters: 1,
+    kilometers: 1000,
+    centimeters: 0.01,
+    feet: 0.3048,
+    inches: 0.0254,
+    miles: 1609.34
+  };
+
+  const inMeters = value * meters[from];
+  const converted = inMeters / meters[to];
+
+  return converted;
+}
+
 
 
 
