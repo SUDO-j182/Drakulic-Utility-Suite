@@ -41,22 +41,10 @@ function renderPasswordTool() {
 
       <div class="field options">
         <span>Include:</span>
-        <label>
-          <input type="checkbox" id="pw-lower" checked>
-          Lowercase
-        </label>
-        <label>
-          <input type="checkbox" id="pw-upper" checked>
-          Uppercase
-        </label>
-        <label>
-          <input type="checkbox" id="pw-numbers" checked>
-          Numbers
-        </label>
-        <label>
-          <input type="checkbox" id="pw-symbols">
-          Symbols
-        </label>
+        <label><input type="checkbox" id="pw-lower" checked> Lowercase</label>
+        <label><input type="checkbox" id="pw-upper" checked> Uppercase</label>
+        <label><input type="checkbox" id="pw-numbers" checked> Numbers</label>
+        <label><input type="checkbox" id="pw-symbols"> Symbols</label>
       </div>
 
       <div class="field">
@@ -72,4 +60,73 @@ function renderPasswordTool() {
       <p id="pw-message" class="helper-text"></p>
     </div>
   `;
+
+  // ===== Element references =====
+  const lenSlider = document.getElementById("pw-length");
+  const lenValue = document.getElementById("pw-length-value");
+  const out = document.getElementById("pw-output");
+  const msg = document.getElementById("pw-message");
+
+  const lower = document.getElementById("pw-lower");
+  const upper = document.getElementById("pw-upper");
+  const numbers = document.getElementById("pw-numbers");
+  const symbols = document.getElementById("pw-symbols");
+
+  const generateBtn = document.getElementById("pw-generate");
+  const copyBtn = document.getElementById("pw-copy");
+
+  // ===== Update length label live =====
+  lenSlider.addEventListener("input", () => {
+    lenValue.textContent = lenSlider.value;
+  });
+
+  // ===== Password generation logic =====
+  generateBtn.addEventListener("click", () => {
+    const length = parseInt(lenSlider.value);
+
+    const chars = {
+      lower: "abcdefghijklmnopqrstuvwxyz",
+      upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      numbers: "0123456789",
+      symbols: "!@#$%^&*()_+{}[]<>?/|~"
+    };
+
+    let pool = "";
+
+    if (lower.checked) pool += chars.lower;
+    if (upper.checked) pool += chars.upper;
+    if (numbers.checked) pool += chars.numbers;
+    if (symbols.checked) pool += chars.symbols;
+
+    if (!pool.length) {
+      msg.textContent = "Select at least one character type.";
+      msg.style.color = "red";
+      out.value = "";
+      return;
+    }
+
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      password += pool[idx];
+    }
+
+    out.value = password;
+    msg.textContent = "Password generated!";
+    msg.style.color = "green";
+  });
+
+  // ===== Copy to clipboard =====
+  copyBtn.addEventListener("click", () => {
+    if (!out.value) {
+      msg.textContent = "Generate a password first.";
+      msg.style.color = "red";
+      return;
+    }
+
+    navigator.clipboard.writeText(out.value);
+    msg.textContent = "Copied!";
+    msg.style.color = "green";
+  });
 }
+
