@@ -1,8 +1,18 @@
-console.log("Drakulic Utility Suite Loaded");
+console.log("Utility Suite Loaded");
 
-// Placeholder for tool switching logic
-document.querySelectorAll(".tool-list button").forEach(btn => {
+const buttons = document.querySelectorAll(".tool-list button");
+const panel = document.querySelector(".tool-panel");
+
+buttons.forEach(btn => {
   btn.addEventListener("click", () => {
-    console.log("Selected tool:", btn.dataset.tool);
+
+    buttons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    panel.innerHTML = `
+      <h2>${btn.textContent}</h2>
+      <p>Tool content will load here.</p>
+    `;
   });
 });
+

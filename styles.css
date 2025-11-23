@@ -1,0 +1,120 @@
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1d1d1d;
+  --text-secondary: #555;
+  --accent: #4a7aff;
+  --accent-hover: #3b63d4;
+
+  --radius: 10px;
+  --shadow: 0 4px 14px rgba(0,0,0,0.08);
+  --border: #e3e4e8;
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.app-header {
+  background: var(--surface);
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.app-header p {
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+.app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+.sidebar {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  height: fit-content;
+}
+
+.tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.tool-list button {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.2s ease;
+}
+
+.tool-list button:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.tool-list button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* =========================================================
+   TOOL PANEL
+========================================================= */
+.tool-panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  min-height: 300px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 800px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+}
