@@ -30,6 +30,9 @@ buttons.forEach(btn => {
     else if (tool === "text-case") {
       renderTextCaseConverter();
     }
+    else if (tool === "calculator") {
+      renderCalculator();
+    }
     else {
       renderPlaceholder(tool, btn.textContent);
     }
@@ -601,3 +604,175 @@ function renderTextCaseConverter() {
     });
   });
 }
+
+// ============================================================
+// CALCULATOR
+// ============================================================
+
+function renderCalculator() {
+  panel.innerHTML = `
+    <h2>Calculator</h2>
+
+    <div class="tool-card">
+      <div class="calculator">
+        <div id="calc-display" class="calc-display">0</div>
+
+        <div class="calc-keys">
+          <button data-type="all-clear" class="calc-key-clear">AC</button>
+          <button data-type="clear">C</button>
+          <button data-type="op" data-op="/">÷</button>
+          <button data-type="op" data-op="*">×</button>
+
+          <button data-type="digit" data-value="7">7</button>
+          <button data-type="digit" data-value="8">8</button>
+          <button data-type="digit" data-value="9">9</button>
+          <button data-type="op" data-op="-">−</button>
+
+          <button data-type="digit" data-value="4">4</button>
+          <button data-type="digit" data-value="5">5</button>
+          <button data-type="digit" data-value="6">6</button>
+          <button data-type="op" data-op="+">+</button>
+
+          <button data-type="digit" data-value="1">1</button>
+          <button data-type="digit" data-value="2">2</button>
+          <button data-type="digit" data-value="3">3</button>
+          <button data-type="equals" class="calc-key-equals">=</button>
+
+          <button data-type="digit" data-value="0" class="calc-key-wide">0</button>
+          <button data-type="dot">.</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const display = document.getElementById("calc-display");
+  const keys = panel.querySelector(".calc-keys");
+
+  let current = "0";
+  let previous = null;
+  let operator = null;
+  let justEvaluated = false;
+
+  function updateDisplay() {
+    display.textContent = current;
+  }
+
+  function clearAll() {
+    current = "0";
+    previous = null;
+    operator = null;
+    justEvaluated = false;
+    updateDisplay();
+  }
+
+  function clearEntry() {
+    current = "0";
+    updateDisplay();
+  }
+
+  function inputDigit(d) {
+    if (justEvaluated && !operator) {
+      current = d;
+      justEvaluated = false;
+      updateDisplay();
+      return;
+    }
+
+    if (current === "0") {
+      current = d;
+    } else {
+      current += d;
+    }
+    updateDisplay();
+  }
+
+  function inputDot() {
+    if (justEvaluated && !operator) {
+      current = "0.";
+      justEvaluated = false;
+      updateDisplay();
+      return;
+    }
+
+    if (!current.includes(".")) {
+      current += ".";
+      updateDisplay();
+    }
+  }
+
+  function performOperation() {
+    if (previous === null || operator === null) return;
+
+    const a = parseFloat(previous);
+    const b = parseFloat(current);
+
+    let result;
+
+    if (operator === "+") {
+      result = a + b;
+    } else if (operator === "-") {
+      result = a - b;
+    } else if (operator === "*") {
+      result = a * b;
+    } else if (operator === "/") {
+      if (b === 0) {
+        current = "Error";
+        previous = null;
+        operator = null;
+        updateDisplay();
+        justEvaluated = true;
+        return;
+      }
+      result = a / b;
+    } else {
+      return;
+    }
+
+    current = String(result);
+    previous = null;
+    operator = null;
+    updateDisplay();
+    justEvaluated = true;
+  }
+
+  function chooseOperator(op) {
+    if (operator && !justEvaluated) {
+      performOperation();
+    }
+
+    previous = current;
+    operator = op;
+    justEvaluated = false;
+    current = "0";
+  }
+
+  keys.addEventListener("click", (event) => {
+    const btn = event.target;
+    if (!btn.dataset.type) return;
+
+    const type = btn.dataset.type;
+
+    if (type === "digit") {
+      inputDigit(btn.dataset.value);
+    }
+    else if (type === "dot") {
+      inputDot();
+    }
+    else if (type === "op") {
+      chooseOperator(btn.dataset.op);
+    }
+    else if (type === "equals") {
+      performOperation();
+    }
+    else if (type === "all-clear") {
+      clearAll();
+    }
+    else if (type === "clear") {
+      clearEntry();
+    }
+  });
+
+  // initial display
+  updateDisplay();
+}
+

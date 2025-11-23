@@ -327,3 +327,81 @@ button {
 .case-actions button:active {
   transform: scale(0.97);
 }
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 260px;
+}
+
+.calc-display {
+  background: #111;
+  color: #0f0;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius);
+  font-family: "Consolas", "SF Mono", ui-monospace, monospace;
+  font-size: 1.3rem;
+  text-align: right;
+  letter-spacing: 0.04em;
+  border: 1px solid #222;
+}
+
+.calc-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.calc-keys button {
+  padding: 0.6rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #eceff4;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.calc-keys button:hover {
+  background: #dee3ed;
+}
+
+.calc-keys button:active {
+  transform: scale(0.96);
+}
+
+.calc-key-op {
+  background: #ffd88a;
+}
+
+.calc-key-op:hover {
+  background: #f3c769;
+}
+
+.calc-key-equals {
+  background: #4caf50;
+  color: #fff;
+}
+
+.calc-key-equals:hover {
+  background: #3e8e41;
+}
+
+.calc-key-clear {
+  background: #ff8a80;
+  color: #fff;
+}
+
+.calc-key-clear:hover {
+  background: #ff6e63;
+}
+
+.calc-key-wide {
+  grid-column: span 2;
+}
