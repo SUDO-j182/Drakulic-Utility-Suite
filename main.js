@@ -170,6 +170,29 @@ function renderTextAnalyzer() {
 
     </div>
   `;
+
+  // Elements
+  const input = document.getElementById("ta-input");
+  const chars = document.getElementById("ta-chars");
+  const words = document.getElementById("ta-words");
+  const sentences = document.getElementById("ta-sentences");
+
+  // Update stats live
+  input.addEventListener("input", () => {
+    const text = input.value;
+
+    // Character count
+    chars.textContent = text.length;
+
+    // Word count
+    const wordList = text.trim().split(/\s+/).filter(w => w.length > 0);
+    words.textContent = text.trim() === "" ? 0 : wordList.length;
+
+    // Sentence count (basic punctuation-based)
+    const sentenceList = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    sentences.textContent = sentenceList.length;
+  });
 }
+
 
 
