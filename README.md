@@ -4,7 +4,7 @@ A collection of clean, fast, browser-based utilities built with HTML, CSS, and v
 This suite demonstrates the kind of custom tools I build for clients lightweight, reliable, and easy to integrate into existing websites.
 
 🔗 Live Demo:
-https://sudo-j182.github.io/Drakulic-Utility-Suite/
+https://sudo-j182.github.io/utility-suite-v1/
 
 ✨ Tools Included
 1. Password Generator
